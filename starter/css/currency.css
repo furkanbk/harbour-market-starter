@@ -24,5 +24,18 @@
 .currency select:disabled { opacity: 0.5; cursor: progress; }
 .currency select:focus-visible { outline: 3px solid var(--sea); outline-offset: 2px; }
 .rates-date { font-weight: 400; }
+.rates-date:focus { outline: none; }
+
+/* in place of the select when the rates failed */
+.rates-retry {
+  font: inherit;
+  color: var(--sea);
+  background: transparent;
+  border: 2px solid var(--sea);
+  border-radius: 99px;
+  padding: 0.5rem 0.8rem;
+  cursor: pointer;
+}
+.rates-retry:focus-visible { outline: 3px solid var(--sea); outline-offset: 2px; }
 
 @media print { .currency { display: none; } }

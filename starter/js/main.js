@@ -42,6 +42,20 @@ document.querySelector("#currency").addEventListener("change", (event) => {
   update();
 });
 
+// The rates: draw "Loading rates…", then the select or Retry
+async function updateRates() {
+  const loading = loadRates(); // sets ratesStatus before its first await
+  render();
+  await loading;
+  render();
+}
+
+// Rates failed: Retry asks again. Focus goes to the note first: the button is about to be hidden
+document.querySelector(".rates-retry").addEventListener("click", () => {
+  document.querySelector(".rates-date").focus();
+  updateRates();
+});
+
 // GET /stalls into state. Never throws: a failure becomes state.status = "error"
 async function loadStalls() {
   state.status = "loading";
@@ -66,5 +80,5 @@ document.querySelector(".load-error button").addEventListener("click", () => {
 setupMenu();
 setupTickets();
 load();
-loadRates().then(render); // in parallel: the stalls never wait for the rates
+updateRates(); // in parallel: the stalls never wait for the rates
 await loadStalls();

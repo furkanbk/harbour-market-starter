@@ -9,9 +9,10 @@ const savedCount = document.querySelector(".saved-count");
 const search = document.querySelector("#vendor-search");
 const errorText = document.querySelector(".load-error p");
 const retry = document.querySelector(".load-error button");
-const currencyBox = document.querySelector(".currency");
+const currencyLabel = document.querySelector(".currency label");
 const currencySelect = document.querySelector("#currency");
 const ratesDate = document.querySelector(".rates-date");
+const ratesRetry = document.querySelector(".rates-retry");
 
 const plural = (n, word) => `${n} ${word}${n === 1 ? "" : "s"}`;
 
@@ -94,8 +95,11 @@ export function render() {
   // (only when different: rewriting the box you're typing in can move the cursor)
   if (search.value !== state.query) search.value = state.query;
 
-  // The currency select: disabled while the rates load, hidden if they failed
-  currencyBox.hidden = state.ratesStatus === "error";
+  // The currency select: disabled while the rates load; if they failed, Retry instead
+  const ratesFailed = state.ratesStatus === "error";
+  currencyLabel.hidden = ratesFailed;
+  currencySelect.hidden = ratesFailed;
+  ratesRetry.hidden = !ratesFailed;
   currencySelect.disabled = state.ratesStatus === "loading";
   currencySelect.value = state.currency;
   ratesDate.textContent = ratesNote();

@@ -30,6 +30,7 @@ function storedRates() {
 export async function loadRates() {
   let data = storedRates();
   if (!data) {
+    state.ratesStatus = "loading"; // also when Retry asks again after an error
     try {
       const body = await getExternalJSON(RATES_URL);
       if (!isValid(body)) throw new Error("rates: unexpected answer");
@@ -61,9 +62,10 @@ export function formatPrice(euros) {
   }).format(amount);
 }
 
-// "2026-10-02" → "Rates of 2 October"
+// The note next to the select: "Rates of 2 October", or what's happening
 export function ratesNote() {
-  if (state.ratesStatus !== "ready") return "";
+  if (state.ratesStatus === "loading") return "Loading rates…";
+  if (state.ratesStatus === "error") return "Couldn't load today's rates: prices in euros.";
   const day = new Date(`${state.ratesDate}T00:00`); // local midnight, not UTC
   return `Rates of ${day.toLocaleDateString("en-GB", { day: "numeric", month: "long" })}`;
 }
